@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -14,8 +16,8 @@ public class UserController {
     private final UserService userService;
     @GetMapping("/register")
     @CrossOrigin("*")
-    public ResponseEntity<Boolean> register(@RequestBody UserRegisterRequestDto dto){
-        //RequestBody'siz denenecek cuku RestController var.
+    public ResponseEntity<Boolean> register(@RequestBody @Valid UserRegisterRequestDto dto){
+        //RequestBody'siz denenecek cunku @RestController var.
         return ResponseEntity.ok(userService.register(dto));
     }
 

@@ -1,10 +1,14 @@
 package com.oguztasgin.service;
 
+import com.oguztasgin.dto.request.UserLoginRequestDto;
 import com.oguztasgin.dto.request.UserRegisterRequestDto;
 import com.oguztasgin.dto.request.UserUpdateRequestDto;
+import com.oguztasgin.dto.response.DoLoginResponseDto;
 import com.oguztasgin.repository.IUserRepository;
 import com.oguztasgin.repository.entity.User;
+import com.oguztasgin.security.JwtTokenManager;
 import com.oguztasgin.utility.ServiceManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,6 +16,8 @@ import java.util.Optional;
 @Service
 public class UserService extends ServiceManager<User,Long> {
     private final IUserRepository repository;
+    @Autowired
+    private JwtTokenManager jwtTokenManager;
 
     public UserService(IUserRepository repository) {
         super(repository);
@@ -60,5 +66,19 @@ public class UserService extends ServiceManager<User,Long> {
         }
         delete(user.get());
         return true;
+    }
+
+    public String login(UserLoginRequestDto dto) {
+        Optional<User> user = repository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword());
+        if (user.isEmpty()){
+            System.out.println("Kullanıcı bulunamadi");
+            return null;
+        }
+        Optional<String> token = jwtTokenManager.createToken(user.get().getId());
+        if (user.isEmpty()){
+            System.out.println("Token bulunamadi");
+            return null;
+        }
+        return token.get();
     }
 }
