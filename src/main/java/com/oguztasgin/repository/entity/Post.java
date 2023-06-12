@@ -23,7 +23,7 @@ public class Post extends BaseEntity{
     @Lob
     @Column(columnDefinition = "text")
     private String content;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
